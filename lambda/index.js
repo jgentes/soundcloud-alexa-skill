@@ -10,9 +10,9 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
-        handlerInput.responseBuilder.speak(speakOutput);
         console.log('TESTESTSETSTSET');
-        return;
+        return handlerInput.responseBuilder.speak(speakOutput);
+        
     }
 };
 const HelpIntentHandler = {
