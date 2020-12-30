@@ -11,7 +11,7 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
         console.log('TESTESTSETSTSET');
-        return handlerInput.responseBuilder.speak(speakOutput);
+        return handlerInput.responseBuilder.speak(speakOutput).getResponse();
         
     }
 };
