@@ -5,10 +5,11 @@ const Alexa = require('ask-sdk-core');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
+        console.log('launchHANDLER INPUT;', handlerInput)
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+        const speakOutput = 'Welcome, you can say play. Which would you like to try?';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -17,6 +18,7 @@ const LaunchRequestHandler = {
 };
 const HelloWorldIntentHandler = {
     canHandle(handlerInput) {
+        console.log('helloworldHANDLER INPUT;', handlerInput)
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
