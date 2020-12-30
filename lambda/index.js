@@ -10,10 +10,9 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .getResponse();
+        handlerInput.responseBuilder.speak(speakOutput);
+        console.log('TESTESTSETSTSET');
+        return;
     }
 };
 const HelpIntentHandler = {
@@ -96,7 +95,6 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
