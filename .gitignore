@@ -3,3 +3,4 @@ ask-resources.json
 .vscode
 lambda/node_modules
 /node_modules
+.package-lock.json
