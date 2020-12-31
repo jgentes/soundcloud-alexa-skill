@@ -1,0 +1,19 @@
+{
+  "name": "soundcloud-dev",
+  "version": "1.0.0",
+  "description": "Alexa skill for Soundcloud",
+  "main": "index.js",
+  "dependencies": {
+    "ask-sdk-core": "^2.10.1",
+    "ask-sdk-model": "^1.34.1",
+    "puppeteer": "^5.5.0",
+    "puppeteer-stream": "^1.0.7"
+  },
+  "devDependencies": {
+    "ask-sdk-local-debug": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Gentes"
+}
