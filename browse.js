@@ -3,20 +3,52 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 // init
-let page, wait;
+let page, wait, stream, file, filename, browser, cleaning;
+
+// pause command
+wait = async ms => await page.waitForTimeout(ms);
+
+const cleanup = async () => {
+  if (cleaning) return;
+  console.log('starting cleanup');
+
+  cleaning = true;
+  await stream && stream.destroy();
+  file && file.close();
+  filename && fs.unlink(filename, () => console.log("audio file deleted"));
+  await browser.close();
+}
+
+// eval command w/ catch block (defaults to click w/ 1s wait afterwards)
+evalPage = async (msg, selector, waitMs, elFn) => {
+  if (cleaning) return;
+  
+  console.log(msg);
+
+  try {    
+    const val = await page.$eval(selector, elFn || (el => el.click()));
+    await wait(waitMs ?? 1000);
+    return val;
+  } catch (e) {
+    console.error(`${msg} failed: ${e.message}`);
+    cleanup();
+  }
+}
 
 const init = async () => {
   // puppeteer browser params
-  const browser = await puppeteer.launch({    
-    devtools: false,
+  browser = await puppeteer.launch({
     ignoreDefaultArgs: ['--mute-audio'],
   });
 
-  // open a new chromium window
-  page = await browser.newPage();
+  browser.on('disconnected', () => {
+    console.error('Browser disconnected');
+    cleanup();
+  });
 
-  // pause command
-  wait = async ms => await page.waitForTimeout(ms);
+  // use first tab
+  const pages = await browser.pages();
+  page = pages[0];
 
   // wait for the page to load (4s?)
   console.log('waiting for page load (4s)');
@@ -25,56 +57,39 @@ const init = async () => {
 };
 
 // logic for changing tracks and creating file for Alexa to stream
-const nextTrack = async start => {
+const nextTrack = async firstTrack => {
   if (!page) await init();
 
-  if (start) {
-    console.log('clicking Mute');
-    await page.$eval('.volume__button', el => el.click());
-    await wait(1000);
-
-    console.log('clicking Play');
-    await page.$eval('[title="Play"]', el => el.click());
-    await wait(500);
-
-    console.log('clicking Shuffle');
-    await page.$eval('[title="Shuffle"]', el => el.click());
-    await wait(500);
+  if (firstTrack) {
+    await evalPage('clicking Mute', '.volume__button');
+    await evalPage('clicking Play', '[title="Play"]');
+    await evalPage('clicking Shuffle', '[title="Shuffle"]');
   }
 
-  console.log('clicking Skip');
-  await page.$eval('.skipControl__next', el => el.click());
-  await wait(1000);
+  await evalPage('clicking Skip', '.skipControl__next');
 
-  if (start) {
-    console.log('unMuting');
-    await page.$eval('.volume__button', el => el.click());
+  if (firstTrack) await evalPage('unMuting', '.volume__button');
+
+  const artist = await evalPage('getting artist', '.playbackSoundBadge__lightLink', 0, el => el.getAttribute('title'));
+  const title = await evalPage('getting track title', '.playbackSoundBadge__titleLink', 0, el => el.getAttribute('title'));
+  const href = await evalPage('getting track link', '.playbackSoundBadge__titleLink', 0, el => new URL(el.href).pathname.replaceAll('/','-'));
+  const background = await evalPage('getting artwork', '.sc-artwork > span', 0, el => el.style.backgroundImage);
+  const image = background?.slice(4, -1).replace(/["']/g, "").replace('t120x120', 't500x500');  
+
+  if (!cleaning) {
+    console.log('creating file for streaming');
+    stream = await page.getStream({audio: true});
+    filename = `${__dirname}/${href}.webm`;
+    file = fs.createWriteStream(filename);
+    stream.pipe(file);
+    console.log({artist, title, image, filename})
   }
 
-  console.log('getting track info');
-  const artist = await page.$eval('.playbackSoundBadge__lightLink', el => el.getAttribute('title'));
-  const title = await page.$eval('.playbackSoundBadge__titleLink', el => el.getAttribute('title'));
-  const background = await page.$eval('.sc-artwork > span', el => el.style.backgroundImage);
-  const image = background?.slice(4, -1).replace(/["']/g, "").replace('t120x120', 't500x500');
-  
-  console.log('creating file for streaming');
-  const stream = await page.getStream({audio: true});
-  const href = await page.$eval('.playbackSoundBadge__titleLink', el => new URL(el.href).pathname.replaceAll('/','-'));
-  const filename = `${__dirname}/${href}.webm`;
-  const file = fs.createWriteStream(filename);
-  
-  console.log({artist, title, image, filename})
-  stream.pipe(file);
-  
-	setTimeout(async () => {
-		await stream.destroy();
-		file.close();		
-    fs.unlink(filename, () => console.log("finished"));
-	}, 1000 * 10);
+	setTimeout(async () => !cleaning && await cleanup(), 1000 * 10);
 
-  console.log('complete')
+  console.log('finished')
 }
 
-nextTrack(true);
+const start = () => nextTrack(true);
 
-//await browser.close();
+module.exports = {start};

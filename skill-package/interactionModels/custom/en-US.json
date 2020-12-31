@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "take me to tomorrowland",
+      "invocationName": "soundcrowd",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
