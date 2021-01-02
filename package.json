@@ -8,6 +8,7 @@
     "ask-sdk-express-adapter": "^2.10.0",
     "ask-sdk-model": "^1.34.1",
     "express": "^4.17.1",
+    "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "puppeteer": "^5.5.0",
     "puppeteer-stream": "^1.0.7"
