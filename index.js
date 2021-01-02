@@ -60,5 +60,5 @@ app.get('/test.mp3', async (req, res) => {
   //res.send(`<a href="${filename}">${filename}</>` || 'No payload');
 });
 
-
 app.listen(3000);
+console.log('Server running..');
