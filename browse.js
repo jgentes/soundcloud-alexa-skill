@@ -40,6 +40,7 @@ evalPage = async (msg, selector, waitMs, elFn) => {
 const init = async () => {
   // puppeteer browser params
   browser = await puppeteer.launch({
+    args: ['--no-sandbox'],
     ignoreDefaultArgs: ['--mute-audio'],
   });
 
