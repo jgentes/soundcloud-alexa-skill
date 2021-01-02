@@ -74,8 +74,6 @@ const nextTrack = async (firstTrack, res) => {
 
   await evalPage('clicking Skip', '.skipControl__next');
 
-  if (firstTrack) await evalPage('unMuting', '.volume__button');
-
   const artist = await evalPage('getting artist', '.playbackSoundBadge__lightLink', 0, el => el.getAttribute('title'));
   const title = await evalPage('getting track title', '.playbackSoundBadge__titleLink', 0, el => el.getAttribute('title'));
   const href = await evalPage('getting track link', '.playbackSoundBadge__titleLink', 0, el => new URL(el.href).pathname.replaceAll('/','-'));
@@ -99,6 +97,8 @@ const nextTrack = async (firstTrack, res) => {
     .on('error', err => cleanup(`Stream error: ${err.message}`))
     .on('end', () => cleanup('End of stream'))
     .pipe(res, { end: true });
+
+    if (firstTrack) await evalPage('unMuting', '.volume__button');
   }  
 
 	setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
