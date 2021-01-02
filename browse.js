@@ -10,9 +10,10 @@ let page, wait, stream, file, filename, browser, cleaning, payload = {};
 // pause command
 wait = async ms => await page.waitForTimeout(ms);
 
-const cleanup = async () => {
+const cleanup = async reason => {
   if (cleaning) return;
   console.log('starting cleanup');
+  if (reason) console.error('Reason: ', reason);
 
   cleaning = true;
   page && stream && await stream.destroy();
@@ -32,8 +33,7 @@ evalPage = async (msg, selector, waitMs, elFn) => {
     await wait(waitMs ?? 1000);
     return val;
   } catch (e) {
-    console.error(`${msg} failed: ${e.message}`);
-    cleanup();
+    cleanup(`${msg} failed: ${e.message}`);
   }
 }
 
@@ -44,9 +44,8 @@ const init = async () => {
   });
 
   browser.on('disconnected', () => {
-    console.error('Browser disconnected');
     page = null;
-    cleanup();
+    cleanup('Browser disconnected');
   });
 
   // use first tab
@@ -94,18 +93,15 @@ const nextTrack = async (firstTrack, res) => {
     stream.pipe(file);
     payload = {artist, title, image, filename, filepath};
     console.log(payload);
-    
+
     ffmpeg(stream)
     .format('mp3')
-    .on('error', function(err) {
-    console.log('An error occurred: ' + err.message); // NEED TO SHUTDOWN THE BROWSER IF THIS HAPPENS
-    })
+    .on('error', err => cleanup(`Stream error: ${err.message}`))
+    .on('end', () => cleanup('End of stream'))
     .pipe(res, { end: true });
-  }
+  }  
 
-  
-
-	setTimeout(async () => !cleaning && await cleanup(), 1000 * 60);
+	setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
 
   console.log('finished');
   return payload;

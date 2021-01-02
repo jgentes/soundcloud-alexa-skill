@@ -37,7 +37,7 @@ app.get('/media/*', (req, res) => {
 // expose media dir
 app.use(express.static('static'));
 
-app.get('/test', async (req, res) => {
+app.get('/test.mp3', async (req, res) => {
   console.log('GET received');
   //res.setHeader('Content-Type', 'audio/webm');
   await start(res);
