@@ -1,15 +1,15 @@
 const express = require('express');
-const Alexa = require('ask-sdk-core');
-const { ExpressAdapter } = require('ask-sdk-express-adapter');
+//const Alexa = require('ask-sdk-core');
+//const { ExpressAdapter } = require('ask-sdk-express-adapter');
 const {start} = require('./browse');
 const fs = require('fs');
 const mediaDir = `${__dirname}/static/tmp`;
-
+/*
 const app = express();
 const skillBuilder = Alexa.SkillBuilders.custom();
 const skill = skillBuilder.create();
 const adapter = new ExpressAdapter(skill, false, false); // set to true, true for cert sig verification and timestamp verification
-
+*/
 const helpText = `
 <!DOCTYPE html>
 <html>
@@ -75,7 +75,7 @@ const helpText = `
 </html>
 `
 
-app.post('/', adapter.getRequestHandlers());
+//app.post('/', adapter.getRequestHandlers());
 app.get('/', (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
