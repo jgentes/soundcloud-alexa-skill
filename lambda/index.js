@@ -14,13 +14,13 @@ const LaunchRequestHandler = {
 
         result.speak(speakOutput);
 
-        const url = 'http://138.68.228.135/test.mp3';
+        const url = 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3';
 
         result
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
             .withShouldEndSession(true);
 
-        return result;
+        return result.getResponse();
         /* return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt(speakOutput)
