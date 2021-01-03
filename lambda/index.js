@@ -5,23 +5,25 @@ const Alexa = require('ask-sdk-core');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
-        console.log('launchHANDLER INPUT;', handlerInput)
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to Tomorrowland. Test me by saying play.';
-        console.log('TESTESTSETSTSET');
-        return handlerInput.responseBuilder.speak(speakOutput).getResponse();
+        const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            //.reprompt(speakOutput)
+            .getResponse();
         
     }
 };
 const SoundcloudIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.SoundcloudIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'SoundcloudIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Playing your Soundcloud reposts in random order.';
+        const speakOutput = 'SoundcloudIntentHandler initiated';
         console.log('INITIATE BROWSE.JS HERE');
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -109,6 +111,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        SoundcloudIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
