@@ -9,10 +9,24 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
+        const speakOutput = 'Welcome to Tomorrowland. Test me by saying play.';
         console.log('TESTESTSETSTSET');
         return handlerInput.responseBuilder.speak(speakOutput).getResponse();
         
+    }
+};
+const SoundcloudIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.SoundcloudIntent';
+    },
+    handle(handlerInput) {
+        const speakOutput = 'Playing your Soundcloud reposts in random order.';
+        console.log('INITIATE BROWSE.JS HERE');
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
     }
 };
 const HelpIntentHandler = {
