@@ -10,11 +10,22 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
 
-        return handlerInput.responseBuilder
+        const result = Alexa.ResponseFactory.init();
+
+        result.speak(speakOutput);
+
+        const url = 'http://138.68.228.135/test.mp3';
+
+        result
+            .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
+            .withShouldEndSession(true);
+
+        return result;
+        /* return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt(speakOutput)
             .getResponse();
-        
+        */
     }
 };
 const SoundcloudIntentHandler = {
