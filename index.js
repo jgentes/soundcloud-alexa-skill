@@ -14,7 +14,7 @@ app.post('/', adapter.getRequestHandlers());
 app.get('/', (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end(helpText);
+  res.end('Say "Alexa, play Soundcrowd" to open this app :)');
 });
 
 app.get('/media/*', (req, res) => {
