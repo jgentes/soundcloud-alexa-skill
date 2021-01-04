@@ -14,7 +14,7 @@ const LaunchRequestHandler = {
 
         result.speak(speakOutput);
 
-        const url = 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3';
+        const url = 'https://soundcrowd.xyz/test.mp3';
 
         result
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
