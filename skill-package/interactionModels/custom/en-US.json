@@ -19,7 +19,7 @@
           "name": "SoundcloudIntent",
           "slots": [],
           "samples": [
-            "play"
+            "likes"
           ]
         },
         {
