@@ -18,7 +18,7 @@ const cleanup = async reason => {
   cleaning = true;
   page && stream && await stream.destroy();
   file && file.close();
-  //filename && fs.unlink(`${mediaDir}/${filename}`, () => console.log("audio file deleted"));
+  filename && fs.unlink(`${mediaDir}/${filename}`, () => console.log("audio file deleted"));
   page && browser && await browser.close();
 }
 
