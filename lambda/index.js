@@ -13,7 +13,7 @@ const LaunchRequestHandler = {
 
         const result = Alexa.ResponseFactory.init();
 
-        const url = 'https://soundcrowd.xyz/test.mp3';
+        const url = 'https://soundcrowd.xyz/test.hls';
 
         result
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
