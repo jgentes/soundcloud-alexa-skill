@@ -1,9 +1,12 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "soundcrowd",
+      "invocationName": "sound crowd",
       "intents": [
-        {"name": "AMAZON.CancelIntent"},
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
         {
           "name": "AMAZON.HelpIntent",
           "samples": []
@@ -12,16 +15,46 @@
           "name": "AMAZON.StopIntent",
           "samples": []
         },
-        {"name": "AMAZON.PauseIntent"},
-        {"name": "AMAZON.ResumeIntent"},
-        {"name": "AMAZON.LoopOffIntent"},
-        {"name": "AMAZON.LoopOnIntent"},
-        {"name": "AMAZON.NextIntent"},
-        {"name": "AMAZON.PreviousIntent"},
-        {"name": "AMAZON.RepeatIntent"},
-        {"name": "AMAZON.ShuffleOffIntent"},
-        {"name": "AMAZON.ShuffleOnIntent"},
-        {"name": "AMAZON.StartOverIntent"},
+        {
+          "name": "AMAZON.PauseIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ResumeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.LoopOffIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.LoopOnIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PreviousIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ShuffleOffIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ShuffleOnIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StartOverIntent",
+          "samples": []
+        },
         {
           "name": "SoundcloudIntent",
           "slots": [],
@@ -37,5 +70,5 @@
       "types": []
     }
   },
-  "version": "1"
+  "version": "13"
 }
