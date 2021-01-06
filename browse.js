@@ -58,7 +58,7 @@ const nextTrack = async (firstTrack, res) => {
   if (!page) await init();
 
   ffmpeg(stream)
-  .format('hls')
+  .format('mp3')
   .on('error', err => cleanup(`Stream error: ${err.message}`))
   .on('end', () => cleanup('End of stream'))
   .pipe(res, { end: true });
