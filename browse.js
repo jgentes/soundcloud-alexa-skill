@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 const ffmpeg = require('fluent-ffmpeg');
 
 // init
-let page, wait, stream, file, filename, filepath, browser, cleaning, payload = {};
+let page, wait, stream, browser, cleaning;
 
 // pause command
 wait = async ms => await page.waitForTimeout(ms);
@@ -48,14 +48,14 @@ const init = async () => {
   // use first tab
   const pages = await browser.pages();
   page = pages[0];
-
-  console.log('creating file for streaming');
-  stream = await page.getStream({audio: true});
 };
 
 // logic for changing tracks and creating file for Alexa to stream
 const nextTrack = async (firstTrack, res) => {
-  if (!page) await init();
+  if (!page) await init();  
+
+  console.log('creating audio stream');
+  stream = await page.getStream({audio: true});
 
   ffmpeg(stream)
   .format('mp3')
@@ -82,11 +82,10 @@ const nextTrack = async (firstTrack, res) => {
 
   const artist = await evalPage('getting artist', '.playbackSoundBadge__lightLink', 0, el => el.getAttribute('title'));
   const title = await evalPage('getting track title', '.playbackSoundBadge__titleLink', 0, el => el.getAttribute('title'));
-  const href = await evalPage('getting track link', '.playbackSoundBadge__titleLink', 0, el => new URL(el.href).pathname.replaceAll('/','-'));
   const background = await evalPage('getting artwork', '.sc-artwork > span', 0, el => el.style.backgroundImage);
   const image = background?.slice(4, -1).replace(/["']/g, "").replace('t120x120', 't500x500');  
 
-  console.log({artist, title, image, filename, filepath});
+  console.log({artist, title, image});
 
   if (firstTrack) await evalPage('unMuting', '.volume__button');
 
