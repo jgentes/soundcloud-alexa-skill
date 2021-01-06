@@ -45,9 +45,7 @@ const init = async () => {
     cleanup('Browser disconnected');
   });
 
-  // use first tab
-  const pages = await browser.pages();
-  page = pages[0];
+  page = await browser.newPage();
 };
 
 // logic for changing tracks and creating file for Alexa to stream
@@ -63,11 +61,9 @@ const nextTrack = async (firstTrack, res) => {
   .on('end', () => cleanup('End of stream'))
   .pipe(res, { end: true });
 
-  // wait for the page to load (4s?)
-  console.log('waiting for page load (4s)');
+  console.log('waiting for page load..');
   try {
-    await page.goto('https://soundcloud.com/jgentes');
-    await wait(4000);
+    await page.goto('https://soundcloud.com/jgentes', {waitUntil: 'networkidle2'});
   } catch (e) {
     console.log('Failed to get page!');
   }
