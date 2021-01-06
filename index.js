@@ -2,8 +2,6 @@ const express = require('express');
 const Alexa = require('ask-sdk-core');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
 const {start} = require('./browse');
-const fs = require('fs');
-const mediaDir = `${__dirname}/static/tmp`;
 
 const app = express();
 const skillBuilder = Alexa.SkillBuilders.custom();

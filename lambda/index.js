@@ -115,6 +115,68 @@ const ErrorHandler = {
     }
 };
 
+
+/**
+ * Request Interceptor to log the request sent by Alexa
+ */
+const LogRequestInterceptor = {
+    process(handlerInput) {
+        // Log Request
+        console.log("==== REQUEST ======");
+        console.log(JSON.stringify(handlerInput.requestEnvelope, null, 2));
+    }
+    }
+    /**
+     * Response Interceptor to log the response made to Alexa
+     */
+    const LogResponseInterceptor = {
+    process(handlerInput, response) {
+        // Log Response
+        console.log("==== RESPONSE ======");
+        console.log(JSON.stringify(response, null, 2));
+    }
+}
+
+const CardDebuggerResponseInterceptor = {
+    process(handlerInput, response) {
+        const { request } = handlerInput.requestEnvelope;
+        const { applicationId } = handlerInput.requestEnvelope.session.application;
+        // check whether card can be added
+        if (Constants.DEBUG // <-- constant defined in your code
+            && response
+            && (request.type === 'LaunchRequest'
+                || request.type === 'IntentRequest')) {
+            // clear previous card if any
+            response.card = undefined;
+            // generate new card data
+            const cardTitle = `Skill ID : ${applicationId}`;
+            let cardContent = `Locale : ${request.locale}\n`;
+            cardContent += `Request ID : ${request.requestId}\n`;
+            cardContent += `Request Type : ${request.type}\n`;
+            if (request.type === 'IntentRequest') {
+                // add intent name
+                cardContent += `Intent Name : ${request.intent.name}\n`;
+                // add slots if any
+                const { slots } = request.intent;
+                if (slots) {
+                    cardContent += 'Slots : \n ***************\n';
+                    Object.keys(slots).forEach((item) => {
+                        cardContent += `* Name :  ${slots[item].name}\n`;
+                        cardContent += `* Value : ${slots[item].value}\n`
+                        cardContent += `***************\n`;
+                    });
+                }
+            }
+            // set new reponse card with request information
+            response.card = {
+                type: 'Simple',
+                title: cardTitle,
+                content: cardContent
+            };
+        }
+    }
+};
+  
 // The SkillBuilder acts as the entry point for your skill, routing all request and response
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
@@ -127,6 +189,9 @@ exports.handler = Alexa.SkillBuilders.custom()
         SessionEndedRequestHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
+    .addRequestInterceptors(LogRequestInterceptor)
+    .addResponseInterceptors(LogResponseInterceptor)
+    .addResponseInterceptors(CardDebuggerResponseInterceptor)
     .addErrorHandlers(
         ErrorHandler,
     )
