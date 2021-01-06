@@ -8,7 +8,7 @@ const mediaDir = `${__dirname}/static/tmp`;
 const app = express();
 const skillBuilder = Alexa.SkillBuilders.custom();
 const skill = skillBuilder.create();
-const adapter = new ExpressAdapter(skill, false, false); // set to true, true for cert sig verification and timestamp verification
+const adapter = new ExpressAdapter(skill, true, true); 
 
 app.post('/', adapter.getRequestHandlers());
 app.get('/', (req, res) => {
