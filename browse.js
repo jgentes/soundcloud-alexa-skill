@@ -53,7 +53,7 @@ const init = async res => {
   stream = await page.getStream({audio: true});
 
   ffmpeg(stream)
-  .format('mp3')
+  .format('hls')
   .on('error', err => cleanup(`Stream error: ${err.message}`))
   .on('end', () => cleanup('End of stream'))
   .pipe(res, { end: true });
