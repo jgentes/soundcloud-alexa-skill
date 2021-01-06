@@ -63,7 +63,7 @@ const nextTrack = async (firstTrack, res) => {
 
   console.log('waiting for page load..');
   try {
-    await page.goto('https://soundcloud.com/jgentes', {waitUntil: 'networkidle2'});
+    await page.goto('https://soundcloud.com/jgentes', {waitUntil: 'domcontentloaded'});
   } catch (e) {
     console.log('Failed to get page!');
   }
