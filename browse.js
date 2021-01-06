@@ -1,9 +1,6 @@
 require('puppeteer-stream');
 const puppeteer = require('puppeteer');
-const fs = require('fs');
-const mediaDir = `${__dirname}/static/tmp`
 const ffmpeg = require('fluent-ffmpeg');
-const { v4: uuidv4 } = require('uuid');
 
 // init
 let page, wait, stream, file, filename, filepath, browser, cleaning, payload = {};
@@ -18,8 +15,6 @@ const cleanup = async reason => {
 
   cleaning = true;
   page && stream && await stream.destroy();
-  file && file.close();
-  filename && fs.unlink(`${mediaDir}/${filename}`, () => console.log("audio file deleted"));
   page && browser && await browser.close();
 }
 
@@ -56,13 +51,6 @@ const init = async res => {
 
   console.log('creating file for streaming');
   stream = await page.getStream({audio: true});
-  
-  filename = `${uuidv4()}.webm`;
-  const filepath = `${mediaDir}/${filename}`;
-  
-  file = fs.createWriteStream(filepath);
-  stream.pipe(file);
-  console.log(payload);
 
   ffmpeg(stream)
   .format('mp3')
