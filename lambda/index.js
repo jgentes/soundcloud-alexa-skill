@@ -8,7 +8,7 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to Tomorrowland. Wait just a moment while I access Soundcloud.<break time="5s"/>';
+        const speakOutput = 'Welcome to Tomorrowland. Wait just a moment while I access Soundcloud.<break time="10s"/>Ok, we should be good to go.';
 
         const result = Alexa.ResponseFactory.init();
 
