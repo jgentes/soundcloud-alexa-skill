@@ -33,7 +33,7 @@ evalPage = async (msg, selector, waitMs, elFn) => {
   }
 }
 
-const init = async res => {
+const init = async () => {
   // puppeteer browser params
   browser = await puppeteer.launch({
     args: ['--no-sandbox'],
@@ -51,6 +51,11 @@ const init = async res => {
 
   console.log('creating file for streaming');
   stream = await page.getStream({audio: true});
+};
+
+// logic for changing tracks and creating file for Alexa to stream
+const nextTrack = async (firstTrack, res) => {
+  if (!page) await init();
 
   ffmpeg(stream)
   .format('hls')
@@ -66,11 +71,6 @@ const init = async res => {
   } catch (e) {
     console.log('Failed to get page!');
   }
-};
-
-// logic for changing tracks and creating file for Alexa to stream
-const nextTrack = async (firstTrack, res) => {
-  if (!page) await init(res);
 
   if (firstTrack) {
     await evalPage('clicking Mute', '.volume__button');
@@ -97,4 +97,4 @@ const nextTrack = async (firstTrack, res) => {
 
 const start = async res => await nextTrack(true, res);
 
-module.exports = {start};
+module.exports = {init, start};

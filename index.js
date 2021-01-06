@@ -1,7 +1,7 @@
 const express = require('express');
 const Alexa = require('ask-sdk-core');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
-const {start} = require('./browse');
+const {init, start} = require('./browse');
 
 const app = express();
 const skillBuilder = Alexa.SkillBuilders.custom();
@@ -59,4 +59,7 @@ app.get('/test.hls', async (req, res) => {
 });
 
 app.listen(3000);
+
+// start puppeteer
+init();
 console.log('Server running..');
