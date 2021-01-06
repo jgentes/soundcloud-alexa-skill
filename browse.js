@@ -57,7 +57,7 @@ const nextTrack = async (firstTrack, res) => {
 
   ffmpeg(stream)
   .format('hls')
-  .audioBitrate(128)
+  .audioQuality(128)
   .on('error', err => cleanup(`Stream error: ${err.message}`))
   .on('end', () => cleanup('End of stream'))
   .pipe(res, { end: true });
