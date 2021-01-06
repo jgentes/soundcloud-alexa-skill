@@ -16,7 +16,7 @@ const LaunchRequestHandler = {
 
         result
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
-            .speak(speakOutput)
+            //.speak(speakOutput)
             .withShouldEndSession(true);
 
         return result.getResponse();
