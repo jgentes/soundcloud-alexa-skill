@@ -2,6 +2,7 @@
 // Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
+const DEBUG = true;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -142,7 +143,7 @@ const CardDebuggerResponseInterceptor = {
         const { request } = handlerInput.requestEnvelope;
         const { applicationId } = handlerInput.requestEnvelope.session.application;
         // check whether card can be added
-        if (Constants.DEBUG // <-- constant defined in your code
+        if (DEBUG // <-- constant defined in your code
             && response
             && (request.type === 'LaunchRequest'
                 || request.type === 'IntentRequest')) {
