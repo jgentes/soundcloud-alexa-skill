@@ -8,16 +8,15 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to Tomorrowland. Playing your Soundcloud reposts in random order.';
+        const speakOutput = 'Welcome to Tomorrowland. Wait just a moment while I access Soundcloud.<break time="5s"/>';
 
         const result = Alexa.ResponseFactory.init();
-
-        result.speak(speakOutput);
 
         const url = 'https://soundcrowd.xyz/test.mp3';
 
         result
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, 0)
+            .speak(speakOutput)
             .withShouldEndSession(true);
 
         return result.getResponse();
