@@ -3,9 +3,10 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const mediaDir = `${__dirname}/static/tmp`
 const ffmpeg = require('fluent-ffmpeg');
+const { v4: uuidv4 } = require('uuid');
 
 // init
-let page, wait, stream, file, filename, browser, cleaning, payload = {};
+let page, wait, stream, file, filename, filepath, browser, cleaning, payload = {};
 
 // pause command
 wait = async ms => await page.waitForTimeout(ms);
@@ -37,7 +38,7 @@ evalPage = async (msg, selector, waitMs, elFn) => {
   }
 }
 
-const init = async () => {
+const init = async res => {
   // puppeteer browser params
   browser = await puppeteer.launch({
     args: ['--no-sandbox'],
@@ -53,6 +54,22 @@ const init = async () => {
   const pages = await browser.pages();
   page = pages[0];
 
+  console.log('creating file for streaming');
+  stream = await page.getStream({audio: true});
+  
+  filename = `${uuidv4()}.webm`;
+  const filepath = `${mediaDir}/${filename}`;
+  
+  file = fs.createWriteStream(filepath);
+  stream.pipe(file);
+  console.log(payload);
+
+  ffmpeg(stream)
+  .format('mp3')
+  .on('error', err => cleanup(`Stream error: ${err.message}`))
+  .on('end', () => cleanup('End of stream'))
+  .pipe(res, { end: true });
+
   // wait for the page to load (4s?)
   console.log('waiting for page load (4s)');
   try {
@@ -65,7 +82,7 @@ const init = async () => {
 
 // logic for changing tracks and creating file for Alexa to stream
 const nextTrack = async (firstTrack, res) => {
-  if (!page) await init();
+  if (!page) await init(res);
 
   if (firstTrack) {
     await evalPage('clicking Mute', '.volume__button');
@@ -81,31 +98,13 @@ const nextTrack = async (firstTrack, res) => {
   const background = await evalPage('getting artwork', '.sc-artwork > span', 0, el => el.style.backgroundImage);
   const image = background?.slice(4, -1).replace(/["']/g, "").replace('t120x120', 't500x500');  
 
-  if (!cleaning) {
-    console.log('creating file for streaming');
-    stream = await page.getStream({audio: true});
-   
-    filename = `${href}.webm`;
-    const filepath = `${mediaDir}/${filename}`;
-    
-    file = fs.createWriteStream(filepath);
-    stream.pipe(file);
-    payload = {artist, title, image, filename, filepath};
-    console.log(payload);
+  console.log({artist, title, image, filename, filepath});
 
-    ffmpeg(stream)
-    .format('mp3')
-    .on('error', err => cleanup(`Stream error: ${err.message}`))
-    .on('end', () => cleanup('End of stream'))
-    .pipe(res, { end: true });
-
-    if (firstTrack) await evalPage('unMuting', '.volume__button');
-  }  
+  if (firstTrack) await evalPage('unMuting', '.volume__button');
 
 	setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
 
   console.log('finished');
-  return payload;
 }
 
 const start = async res => await nextTrack(true, res);
