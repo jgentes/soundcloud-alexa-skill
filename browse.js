@@ -70,13 +70,13 @@ const nextTrack = async (firstTrack, res) => {
   }
 
   if (firstTrack) {
-    await evalPage('Clicking Mute', '.volume__button');
-    await evalPage('Clicking Play', '[title="Play"]');
-    await evalPage('Clicking Shuffle', '[title="Shuffle"]');
+    await evalPage('Clicking Mute', '.volume__button', 0);
+    await evalPage('Clicking Play', '[title="Play"]', 0);
+    await evalPage('Clicking Shuffle', '[title="Shuffle"]', 0);
     await evalPage('Disabling Autoplay', '.queueFallback__toggle > label');
   }
 
-  await evalPage('Clicking Skip', '.skipControl__next');
+  await evalPage('Clicking Skip', '.skipControl__next', 0);
 
   const artist = await evalPage('getting artist', '.playbackSoundBadge__lightLink', 0, el => el.getAttribute('title'));
   const title = await evalPage('getting track title', '.playbackSoundBadge__titleLink', 0, el => el.getAttribute('title'));
