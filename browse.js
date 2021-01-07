@@ -64,7 +64,7 @@ const nextTrack = async (firstTrack, res) => {
 
   console.log('waiting for page load..');
   try {
-    await page.goto('https://soundcloud.com/jgentes', {waitUntil: 'networkidle2'});
+    await page.goto('https://soundcloud.com/likes', {waitUntil: 'networkidle2'});
   } catch (e) {
     console.log('Failed to get page!');
   }
@@ -86,7 +86,7 @@ const nextTrack = async (firstTrack, res) => {
 
   if (firstTrack) await evalPage('unMuting', '.volume__button');
 
-	setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
+	//setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
 
   console.log('finished');
 }
