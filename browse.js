@@ -52,7 +52,7 @@ const init = async () => {
 const nextTrack = async (firstTrack, res) => {
   if (!page) await init();  
 
-  console.log('creating audio stream');
+  console.log('Creating audio stream');
   stream = await page.getStream({audio: true});
 
   ffmpeg(stream)
@@ -62,7 +62,7 @@ const nextTrack = async (firstTrack, res) => {
   .on('end', () => cleanup('End of stream'))
   .pipe(res, { end: true });
 
-  console.log('waiting for page load..');
+  console.log('Waiting for page load..');
   try {
     await page.goto('https://soundcloud.com/jgentes/likes', {waitUntil: 'networkidle2'});
   } catch (e) {
@@ -70,12 +70,13 @@ const nextTrack = async (firstTrack, res) => {
   }
 
   if (firstTrack) {
-    await evalPage('clicking Mute', '.volume__button');
-    await evalPage('clicking Play', '[title="Play"]');
-    await evalPage('clicking Shuffle', '[title="Shuffle"]');
+    await evalPage('Clicking Mute', '.volume__button');
+    await evalPage('Clicking Play', '[title="Play"]');
+    await evalPage('Clicking Shuffle', '[title="Shuffle"]');
+    await evalPage('Disabling Autoplay', '.queueFallback__toggle > label');
   }
 
-  await evalPage('clicking Skip', '.skipControl__next');
+  await evalPage('Clicking Skip', '.skipControl__next');
 
   const artist = await evalPage('getting artist', '.playbackSoundBadge__lightLink', 0, el => el.getAttribute('title'));
   const title = await evalPage('getting track title', '.playbackSoundBadge__titleLink', 0, el => el.getAttribute('title'));
@@ -88,7 +89,7 @@ const nextTrack = async (firstTrack, res) => {
 
 	//setTimeout(async () => !cleaning && await cleanup('1 minute timeout'), 1000 * 60);
 
-  console.log('finished');
+  console.log('Finished');
 }
 
 const start = async res => await nextTrack(true, res);
