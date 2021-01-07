@@ -73,7 +73,6 @@ const nextTrack = async (firstTrack, res) => {
     await evalPage('Clicking Mute', '.volume__button', 0);
     await evalPage('Clicking Play', '[title="Play"]');
     await evalPage('Clicking Shuffle', '[title="Shuffle"]', 0);
-    await evalPage('Disabling Autoplay', '.queueFallback__toggle > label');
   }
 
   await evalPage('Clicking Skip', '.skipControl__next', 0);
